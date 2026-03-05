@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.htc.upm.vive.openxr": {
-      "version": "file:C:/Users/Blake Casto/Downloads/School/Capstone/com.htc.upm.vive.openxr-2.5.1/package",
+      "version": "file:com.htc.upm.vive.openxr-2.5.1/Package",
       "depth": 0,
       "source": "local",
       "dependencies": {
