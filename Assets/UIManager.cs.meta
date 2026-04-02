@@ -3,7 +3,16 @@ guid: 5d3d637ac5b527041a6f1eef89a5a352
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - mainPanel: {instanceID: 0}
+  - obtainingDataPanel: {instanceID: 0}
+  - successPanel: {instanceID: 0}
+  - authFailurePanel: {instanceID: 0}
+  - enrollFailurePanel: {instanceID: 0}
+  - backUpCreationPanel: {instanceID: 0}
+  - backUpPanel: {instanceID: 0}
+  - progressBar: {instanceID: 0}
+  - continueButton: {fileID: 5289182684458692540, guid: e5db301629853dd4a99835fa70099d79, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

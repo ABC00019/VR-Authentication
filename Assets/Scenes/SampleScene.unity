@@ -3114,6 +3114,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 935007728}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ShowSuccess
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &703746894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4777,8 +4789,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d3d637ac5b527041a6f1eef89a5a352, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainPanel: {fileID: 0}
-  obtainingDataPanel: {fileID: 0}
+  mainPanel: {fileID: 1617169458}
+  obtainingDataPanel: {fileID: 478466713}
+  successPanel: {fileID: 980749397}
+  authFailurePanel: {fileID: 1793158051}
+  enrollFailurePanel: {fileID: 258892813}
+  backUpCreationPanel: {fileID: 397041355}
+  backUpPanel: {fileID: 1639755792}
+  progressBar: {fileID: 2009611808}
+  continueButton: {fileID: 703746891}
+  progressDuration: 3
 --- !u!224 &935007729
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8129,7 +8149,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 8e-44, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 5.51013e-40, y: 3.4e-44, z: 1.4546743e-37, w: 9.1837e-41}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
