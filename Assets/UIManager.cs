@@ -13,11 +13,20 @@ public class UIManager : MonoBehaviour
     public GameObject enrollFailurePanel;
     public GameObject backUpCreationPanel;
     public GameObject backUpPanel;
+    public GameObject keyboardPanel;
 
     [Header("Obtaining Data UI")]
     public Slider progressBar;
     public GameObject continueButton;
     public float progressDuration = 3f;
+
+    [Header("User List Panel")]
+    public GameObject userListPanel;
+    public Transform userListContent;   // scroll view content parent
+    public GameObject userListItemPrefab; // prefab with a text component for each user's name
+
+    [Header("Enrollment")]
+    public TMPro.TMP_InputField usernameInputField;
 
     void Start()
     {
@@ -93,7 +102,8 @@ public class UIManager : MonoBehaviour
         GameObject[] allPanels = {
             mainPanel, obtainingDataPanel, successPanel,
             authFailurePanel, enrollFailurePanel,
-            backUpCreationPanel, backUpPanel
+            backUpCreationPanel, backUpPanel, userListPanel,
+            keyboardPanel
         };
 
         foreach (GameObject panel in allPanels)
@@ -101,5 +111,39 @@ public class UIManager : MonoBehaviour
             if (panel != null)
                 panel.SetActive(panel == target);
         }
+    }
+
+    public void ShowUserList()
+    {
+        // Clear old entries
+        foreach (Transform child in userListContent)
+            Destroy(child.gameObject);
+
+        // Populate from saved data
+        foreach (UserProfile user in UserDataManager.Instance.GetAllUsers())
+        {
+            GameObject item = Instantiate(userListItemPrefab, userListContent);
+            item.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = user.username;
+        }
+        ShowOnly(userListPanel);
+    }
+
+    public void StartEnrollment()
+    {
+        string username = usernameInputField.text.Trim();
+        if (string.IsNullOrEmpty(username)) 
+            return;
+        ShowOnly(backUpCreationPanel);
+        GazePatternRecorder.Instance.StartRecording();
+        GazePatternRecorder.Instance.OnPatternComplete += FinishEnrollment;
+    }
+
+    private void FinishEnrollment()
+    {
+        GazePatternRecorder.Instance.OnPatternComplete -= FinishEnrollment;
+        string username = usernameInputField.text.Trim();
+        List<int> pattern = GazePatternRecorder.Instance.GetRecordedPattern();
+        UserDataManager.Instance.EnrollUser(username, pattern);
+        ShowSuccess();
     }
 }
