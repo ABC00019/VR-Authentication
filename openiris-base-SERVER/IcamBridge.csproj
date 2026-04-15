@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk"> 
+  <PropertyGroup> 
+    <OutputType>Exe</OutputType> 
+    <TargetFramework>net48</TargetFramework> 
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems> 
+  </PropertyGroup> 
+  <ItemGroup> 
+    <Compile Include="IcamBridge.cs" /> 
+    <Reference Include="Interop.LGIAiCamTD100ControlLib"> 
+      <HintPath>C:\Users\kevin\Iris Capture\Iris ID\iCAM TD100 SDK\SDK\exe\Interop.LGIAiCamTD100ControlLib.DLL</HintPath> 
+    </Reference> 
+  </ItemGroup> 
+</Project> 

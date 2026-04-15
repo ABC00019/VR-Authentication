@@ -1,0 +1,3 @@
+[console_scripts]
+nb-clean=nb_clean.cli:main
+

@@ -1,0 +1,10 @@
+Gallery Image, Probe Image, Gall Probe Score
+44_L_1_001.bmp, S2001L17.jpg, 0.4757
+44_L_1_001.bmp, S2002L02.jpg, 0.4733
+44_L_1_001.bmp, S2003L06.jpg, 0.4725
+44_L_1_100.bmp, S2001L17.jpg, 0.4785
+44_L_1_100.bmp, S2002L02.jpg, 0.4817
+44_L_1_100.bmp, S2003L06.jpg, 0.4685
+44_L_1_160.bmp, S2001L17.jpg, 0.4776
+44_L_1_160.bmp, S2002L02.jpg, 0.4806
+44_L_1_160.bmp, S2003L06.jpg, 0.4697

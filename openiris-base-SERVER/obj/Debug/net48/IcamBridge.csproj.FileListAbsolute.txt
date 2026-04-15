@@ -1,0 +1,16 @@
+C:\Users\kevin\Downloads\openiris-base\openiris-base\obj\Debug\net48\IcamBridge.csproj.AssemblyReference.cache
+C:\Users\kevin\Downloads\openiris-base\openiris-base\obj\Debug\net48\IcamBridge.opencv.samples.wp8.OcvImageManipulation.PhoneXamlDirect3DApp1.PhoneXamlDirect3DApp1.Resources.AppResources.resources
+C:\Users\kevin\Downloads\openiris-base\openiris-base\obj\Debug\net48\IcamBridge.opencv.samples.wp8.OcvRotatingCube.PhoneXamlDirect3DApp1.PhoneXamlDirect3DApp1.Resources.AppResources.resources
+C:\Users\kevin\Downloads\openiris-base\openiris-base\obj\Debug\net48\IcamBridge.opencv.samples.wp8.OpenCVXaml.OpenCVXaml.Resources.AppResources.resources
+C:\Users\kevin\Downloads\openiris-base\openiris-base\obj\Debug\net48\IcamBridge.csproj.GenerateResource.cache
+C:\Users\kevin\Downloads\openiris-base\openiris-base\obj\Debug\net48\IcamBridge.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kevin\Downloads\openiris-base\openiris-base\obj\Debug\net48\IcamBridge.AssemblyInfoInputs.cache
+C:\Users\kevin\Downloads\openiris-base\openiris-base\obj\Debug\net48\IcamBridge.AssemblyInfo.cs
+C:\Users\kevin\Downloads\openiris-base\openiris-base\obj\Debug\net48\IcamBridge.csproj.CoreCompileInputs.cache
+C:\Users\kevin\Downloads\openiris-base\openiris-base\bin\Debug\net48\IcamBridge.exe.config
+C:\Users\kevin\Downloads\openiris-base\openiris-base\bin\Debug\net48\IcamBridge.exe
+C:\Users\kevin\Downloads\openiris-base\openiris-base\bin\Debug\net48\IcamBridge.pdb
+C:\Users\kevin\Downloads\openiris-base\openiris-base\bin\Debug\net48\Interop.LGIAiCamTD100ControlLib.DLL
+C:\Users\kevin\Downloads\openiris-base\openiris-base\obj\Debug\net48\IcamBridge.csproj.Up2Date
+C:\Users\kevin\Downloads\openiris-base\openiris-base\obj\Debug\net48\IcamBridge.exe
+C:\Users\kevin\Downloads\openiris-base\openiris-base\obj\Debug\net48\IcamBridge.pdb

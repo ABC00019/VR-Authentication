@@ -1,0 +1,209 @@
+﻿// Created by Microsoft (R) C/C++ Compiler Version 14.43.34808.0 (203d1134).
+//
+// C:\Users\kevin\Downloads\openiris-base\openiris-base\IAiCamTD100Control.tlh
+//
+// C++ source equivalent of type library C:\\Users\\kevin\\Iris Capture\\Iris ID\\iCAM TD100 SDK\\SDK\\tlb\\IAiCamTD100Control.tlb
+// compiler-generated file - DO NOT EDIT!
+
+#pragma once
+#pragma pack(push, 8)
+
+#include <comdef.h>
+
+//
+// Forward references and typedefs
+//
+
+struct __declspec(uuid("285ffff4-8fbf-41b8-9618-feac22b61b71"))
+/* LIBID */ __LGIAiCamTD100ControlLib;
+struct __declspec(uuid("d6c55b1a-504f-4f4b-9aa0-819cd4596d9c"))
+/* dispinterface */ _IIAiCamTD100ControlEvents;
+struct /* coclass */ IAiCamTD100Control;
+struct __declspec(uuid("b2ba2009-b98b-4d7e-bed1-edaaa2111ef7"))
+/* dual interface */ IIAiCamTD100Control;
+
+//
+// Smart pointer typedef declarations
+//
+
+_COM_SMARTPTR_TYPEDEF(_IIAiCamTD100ControlEvents, __uuidof(_IIAiCamTD100ControlEvents));
+_COM_SMARTPTR_TYPEDEF(IIAiCamTD100Control, __uuidof(IIAiCamTD100Control));
+
+//
+// Type library items
+//
+
+struct __declspec(uuid("d6c55b1a-504f-4f4b-9aa0-819cd4596d9c"))
+_IIAiCamTD100ControlEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT OnGetStatus (
+        long type,
+        long lParam );
+    HRESULT OnGetIrisImage (
+        const _variant_t & vRightRawImage,
+        const _variant_t & vLeftRawImage );
+    HRESULT OnGetFaceImage (
+        const _variant_t & vBmpImage );
+    HRESULT OnGetLiveImage (
+        const _variant_t & vBmpImage,
+        long lRange,
+        long lDistance );
+    HRESULT OnGetSceneImage (
+        const _variant_t & vBmpImage );
+    HRESULT OnGetLiveIrisInfo (
+        long lDistance,
+        long lRange,
+        long lVelocity,
+        long lNone );
+};
+
+struct __declspec(uuid("3924552b-1e57-44bd-aff0-b30cec361df5"))
+IAiCamTD100Control;
+    // [ default ] interface IIAiCamTD100Control
+    // [ default, source ] dispinterface _IIAiCamTD100ControlEvents
+
+struct __declspec(uuid("b2ba2009-b98b-4d7e-bed1-edaaa2111ef7"))
+IIAiCamTD100Control : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    long Open (
+        BSTR * bstrSerialNumber );
+    long Close ( );
+    long SetLED (
+        long lStatus );
+    long PlayMessage (
+        long lIndex );
+    long PressButton ( );
+    long StartCapture (
+        long lMode );
+    long GetSoundVolume (
+        long * plVolume );
+    long SetSoundVolume (
+        long lVolume );
+    long GetLanguage (
+        long * plIndex );
+    long SetLanguage (
+        long lIndex );
+    long Sleep ( );
+    long Wakeup ( );
+    long SetLive (
+        long lDisplayMode );
+    long ShowLCDFaceGuide (
+        long lDisplay );
+    long SetLCDFaceGuideBounds (
+        long lInnerWidth,
+        long lInnerHeight,
+        long lOuterWidth,
+        long lOuterHeight );
+    long SetLCDFaceGuidePos (
+        long lPositionX,
+        long lPositionY );
+    long SetFocusPosition (
+        long lOperatingMode,
+        long lFocusValue );
+    long GetFocusPosition (
+        long * lFocusValue );
+    long GetSavedLanguages (
+        long * plNumberOfLanguages,
+        VARIANT * bArrayOfLanguageIDs );
+    long GetVersion (
+        long lType,
+        BSTR * bstrVersion );
+
+    //
+    // Raw methods provided by interface
+    //
+
+      virtual HRESULT __stdcall raw_Open (
+        /*[out]*/ BSTR * bstrSerialNumber,
+        /*[out,retval]*/ long * plResult ) = 0;
+      virtual HRESULT __stdcall raw_Close (
+        /*[out,retval]*/ long * plResult ) = 0;
+      virtual HRESULT __stdcall raw_SetLED (
+        /*[in]*/ long lStatus,
+        /*[out,retval]*/ long * plResult ) = 0;
+      virtual HRESULT __stdcall raw_PlayMessage (
+        /*[in]*/ long lIndex,
+        /*[out,retval]*/ long * plResult ) = 0;
+      virtual HRESULT __stdcall raw_PressButton (
+        /*[out,retval]*/ long * plResult ) = 0;
+      virtual HRESULT __stdcall raw_StartCapture (
+        /*[in]*/ long lMode,
+        /*[out,retval]*/ long * plResult ) = 0;
+      virtual HRESULT __stdcall raw_GetSoundVolume (
+        /*[out]*/ long * plVolume,
+        /*[out,retval]*/ long * plResult ) = 0;
+      virtual HRESULT __stdcall raw_SetSoundVolume (
+        /*[in]*/ long lVolume,
+        /*[out,retval]*/ long * plResult ) = 0;
+      virtual HRESULT __stdcall raw_GetLanguage (
+        /*[out]*/ long * plIndex,
+        /*[out,retval]*/ long * plResult ) = 0;
+      virtual HRESULT __stdcall raw_SetLanguage (
+        /*[in]*/ long lIndex,
+        /*[out,retval]*/ long * plResult ) = 0;
+      virtual HRESULT __stdcall raw_Sleep (
+        /*[out,retval]*/ long * plResult ) = 0;
+      virtual HRESULT __stdcall raw_Wakeup (
+        /*[out,retval]*/ long * plResult ) = 0;
+      virtual HRESULT __stdcall raw_SetLive (
+        /*[in]*/ long lDisplayMode,
+        /*[out,retval]*/ long * plResult ) = 0;
+      virtual HRESULT __stdcall raw_ShowLCDFaceGuide (
+        /*[in]*/ long lDisplay,
+        /*[out,retval]*/ long * plResult ) = 0;
+      virtual HRESULT __stdcall raw_SetLCDFaceGuideBounds (
+        /*[in]*/ long lInnerWidth,
+        /*[in]*/ long lInnerHeight,
+        /*[in]*/ long lOuterWidth,
+        /*[in]*/ long lOuterHeight,
+        /*[out,retval]*/ long * plResult ) = 0;
+      virtual HRESULT __stdcall raw_SetLCDFaceGuidePos (
+        /*[in]*/ long lPositionX,
+        /*[in]*/ long lPositionY,
+        /*[out,retval]*/ long * plResult ) = 0;
+      virtual HRESULT __stdcall raw_SetFocusPosition (
+        /*[in]*/ long lOperatingMode,
+        /*[in]*/ long lFocusValue,
+        /*[out,retval]*/ long * plResult ) = 0;
+      virtual HRESULT __stdcall raw_GetFocusPosition (
+        /*[out]*/ long * lFocusValue,
+        /*[out,retval]*/ long * plResult ) = 0;
+      virtual HRESULT __stdcall raw_GetSavedLanguages (
+        /*[out]*/ long * plNumberOfLanguages,
+        /*[out]*/ VARIANT * bArrayOfLanguageIDs,
+        /*[out,retval]*/ long * plResult ) = 0;
+      virtual HRESULT __stdcall raw_GetVersion (
+        /*[in]*/ long lType,
+        /*[out]*/ BSTR * bstrVersion,
+        /*[out,retval]*/ long * plResult ) = 0;
+};
+
+//
+// Named GUID constants initializations
+//
+
+extern "C" const GUID __declspec(selectany) LIBID_LGIAiCamTD100ControlLib =
+    {0x285ffff4,0x8fbf,0x41b8,{0x96,0x18,0xfe,0xac,0x22,0xb6,0x1b,0x71}};
+extern "C" const GUID __declspec(selectany) DIID__IIAiCamTD100ControlEvents =
+    {0xd6c55b1a,0x504f,0x4f4b,{0x9a,0xa0,0x81,0x9c,0xd4,0x59,0x6d,0x9c}};
+extern "C" const GUID __declspec(selectany) CLSID_IAiCamTD100Control =
+    {0x3924552b,0x1e57,0x44bd,{0xaf,0xf0,0xb3,0x0c,0xec,0x36,0x1d,0xf5}};
+extern "C" const GUID __declspec(selectany) IID_IIAiCamTD100Control =
+    {0xb2ba2009,0xb98b,0x4d7e,{0xbe,0xd1,0xed,0xaa,0xa2,0x11,0x1e,0xf7}};
+
+//
+// Wrapper method implementations
+//
+
+#include "C:\Users\kevin\Downloads\openiris-base\openiris-base\IAiCamTD100Control.tli"
+
+#pragma pack(pop)
