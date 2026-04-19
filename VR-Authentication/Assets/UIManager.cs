@@ -12,6 +12,13 @@ public class AuthResponse
     public string message;
 }
 
+[System.Serializable]
+public class UserExistsResponse
+{
+    public bool exists;
+    public string username;
+}
+
 public class UIManager : MonoBehaviour
 {
     [Header("Panels")]
@@ -24,6 +31,7 @@ public class UIManager : MonoBehaviour
     public GameObject backUpPanel;
     public GameObject keyboardPanel;
     public GameObject userListPanel;
+    public GameObject loginOptionsPanel;
 
     [Header("Obtaining Data UI")]
     public Slider progressBar;
@@ -55,8 +63,81 @@ public class UIManager : MonoBehaviour
 
     public void StartAuthentication()
     {
+        GazePatternRecorder.Instance.OnPatternComplete -= StartAuthentication;
+        string username = usernameInputField.text.Trim();
+        List<int> pattern = GazePatternRecorder.Instance.GetRecordedPattern();
+
+        if (UserDataManager.Instance.AuthenticateUser(username, pattern))
+        {
+            Debug.Log("Pattern authentication successful");
+            ShowSuccess();
+        }
+        else
+        {
+            Debug.Log("Pattern authentication failed");
+            ShowAuthFailure();
+        }
+    }
+
+    // Called by the Sign-In button on the Main panel
+    public void SignIn()
+    {
+        string username = usernameInputField.text.Trim();
+        if (string.IsNullOrEmpty(username))
+        {
+            Debug.Log("Username empty");
+            return;
+        }
+
+        if (!UserDataManager.Instance.UsernameExists(username))
+        {
+            Debug.Log($"User '{username}' not enrolled");
+            ShowAuthFailure();
+            return;
+        }
+
+        ShowOnly(loginOptionsPanel);
+    }
+
+    private IEnumerator VerifyUserAndSignIn(string username)
+    {
+        bool irisExists = false;
+        yield return CheckIrisExists(username, result => irisExists = result);
+
+        bool patternExists = UserDataManager.Instance.UsernameExists(username);
+
+        if (!irisExists && !patternExists)
+        {
+            Debug.Log($"User '{username}' not enrolled in either system");
+            ShowAuthFailure();
+            yield break;
+        }
+
+        if (!irisExists || !patternExists)
+        {
+            Debug.LogWarning($"User '{username}' has incomplete enrollment (iris: {irisExists}, pattern: {patternExists})");
+            ShowAuthFailure();
+            yield break;
+        }
+
+        Debug.Log($"User '{username}' fully enrolled, routing to LoginOptions");
+        ShowOnly(loginOptionsPanel);
+    }
+
+    // Called by the Iris button on LoginOptions
+    public void LoginWithIris()
+    {
         ShowOnly(obtainingDataPanel);
         StartCoroutine(ExecuteIrisProcess($"{baseUrl}/authenticate", true));
+    }
+
+    // Called by the Pattern button on LoginOptions
+    public void LoginWithPattern()
+    {
+        GazePatternRecorder.Instance.OnPatternComplete = null;
+        ShowOnly(backUpPanel);
+        GazePatternRecorder.Instance.StartRecording();
+        GazePatternRecorder.Instance.OnPatternComplete += StartAuthentication;
     }
 
     public void StartEnrollment()
@@ -73,7 +154,7 @@ public class UIManager : MonoBehaviour
         vrKeyboard = TouchScreenKeyboard.Open(usernameInputField.text, TouchScreenKeyboardType.Default, false, false, false, false, "Enter Username");
     }
 
-    // --- Core Communication Logic (Only ONE copy) ---
+    // --- Core Communication Logic ---
 
     private IEnumerator ExecuteIrisProcess(string url, bool isAuthenticating)
     {
@@ -91,19 +172,24 @@ public class UIManager : MonoBehaviour
                 {
                     if (!isAuthenticating)
                     {
-                        // Proceed to Gaze Backup after Iris scan for Enrollment
                         ShowBackUpCreation();
                         GazePatternRecorder.Instance.StartRecording();
                         GazePatternRecorder.Instance.OnPatternComplete += FinishEnrollment;
                     }
                     else
                     {
-                        ShowSuccess();
+                        // Verify iris identity matches the entered username
+                        string enteredUsername = usernameInputField.text.Trim();
+                        if (res.identity == enteredUsername)
+                        {
+                            ShowSuccess();
+                        }
+                        else
+                        {
+                            Debug.Log($"Iris matched '{res.identity}' but user entered '{enteredUsername}'");
+                            ShowAuthFailure();
+                        }
                     }
-                }
-                else
-                {
-                    if (isAuthenticating) ShowAuthFailure(); else ShowEnrollFailure();
                 }
             }
             else
@@ -114,13 +200,92 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    private IEnumerator CheckIrisExists(string username, System.Action<bool> callback)
+    {
+        using (UnityWebRequest req = UnityWebRequest.Get($"{baseUrl}/user_exists/{username}"))
+        {
+            yield return req.SendWebRequest();
+
+            if (req.result == UnityWebRequest.Result.Success)
+            {
+                UserExistsResponse res = JsonUtility.FromJson<UserExistsResponse>(req.downloadHandler.text);
+                callback(res.exists);
+            }
+            else
+            {
+                Debug.LogError($"User exists check failed: {req.error}");
+                callback(false);
+            }
+        }
+    }
+
     private void FinishEnrollment()
     {
         GazePatternRecorder.Instance.OnPatternComplete -= FinishEnrollment;
         string username = usernameInputField.text.Trim();
         List<int> pattern = GazePatternRecorder.Instance.GetRecordedPattern();
+
+        // Require a non-empty pattern
+        if (pattern.Count < 4)
+        {
+            Debug.Log("Pattern too short, rolling back enrollment");
+            StartCoroutine(RollbackIrisEnrollment(username));
+            return;
+        }
+
         UserDataManager.Instance.EnrollUser(username, pattern);
+        Debug.Log($"Enrollment complete for '{username}' — both iris and pattern saved");
         ShowSuccess();
+    }
+
+    private IEnumerator RollbackIrisEnrollment(string username)
+    {
+        using (UnityWebRequest req = UnityWebRequest.Delete($"{baseUrl}/delete_user/{username}"))
+        {
+            yield return req.SendWebRequest();
+            if (req.result == UnityWebRequest.Result.Success)
+                Debug.Log($"Rolled back iris data for '{username}'");
+            else
+                Debug.LogError($"Rollback failed: {req.error}");
+        }
+        ShowEnrollFailure();
+    }
+
+    private IEnumerator VerifyAndSaveEnrollment(string username, List<int> pattern)
+    {
+        bool irisExists = false;
+        yield return CheckIrisExists(username, result => irisExists = result);
+
+        if (!irisExists)
+        {
+            Debug.LogError("Iris data missing for user, rolling back enrollment");
+            ShowEnrollFailure();
+            yield break;
+        }
+
+        UserDataManager.Instance.EnrollUser(username, pattern);
+        Debug.Log($"Enrollment complete for '{username}' — iris and pattern both saved");
+        ShowSuccess();
+    }
+
+    public void DeleteUser(string username)
+    {
+        StartCoroutine(DeleteUserCoroutine(username));
+    }
+
+    private IEnumerator DeleteUserCoroutine(string username)
+    {
+        // Delete iris data on server
+        using (UnityWebRequest req = UnityWebRequest.Delete($"{baseUrl}/delete_user/{username}"))
+        {
+            yield return req.SendWebRequest();
+            if (req.result != UnityWebRequest.Result.Success)
+                Debug.LogWarning($"Iris delete failed: {req.error}");
+        }
+
+        // Delete pattern data locally
+        UserDataManager.Instance.DeleteUser(username);
+        Debug.Log($"User '{username}' deleted from both systems");
     }
 
     // --- UI Navigation Methods ---
@@ -138,7 +303,7 @@ public class UIManager : MonoBehaviour
             mainPanel, obtainingDataPanel, successPanel,
             authFailurePanel, enrollFailurePanel,
             backUpCreationPanel, backUpPanel, userListPanel,
-            keyboardPanel
+            keyboardPanel, loginOptionsPanel
         };
 
         foreach (GameObject panel in allPanels)
@@ -146,6 +311,20 @@ public class UIManager : MonoBehaviour
             if (panel != null)
                 panel.SetActive(panel == target);
         }
+    }
+
+    public void ShowUserListPanel()
+    {
+        foreach (Transform child in userListContent)
+            Destroy(child.gameObject);
+
+        foreach (UserProfile user in UserDataManager.Instance.GetAllUsers())
+        {
+            GameObject item = Instantiate(userListItemPrefab, userListContent);
+            item.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = user.username;
+        }
+
+        ShowOnly(userListPanel);
     }
 
     private IEnumerator RunProgressBar()

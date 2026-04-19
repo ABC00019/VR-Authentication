@@ -5,13 +5,13 @@ import time
 import shutil
 import glob
 
-# Import your custom logic (Make sure these .py files are in the same folder)
+# custom logic (Make sure these .py files are in the same folder)
 from prep_recognition import move_latest_frames
 from match_unity import check_auth, load_gallery
 
 newapp = Flask(__name__)
 
-# --- CONFIG (Copied from your working version) ---
+# --- CONFIG ---
 SDK_ENROLL_DIR = r"C:\Users\kevin\Documents\iCAM TD100 SDK\Enrollment"
 SDK_REC_DIR    = r"C:\Users\kevin\Documents\iCAM TD100 SDK\Recognition"
 GALLERY_DIR    = r"C:\Users\kevin\Downloads\openiris-base-SERVER\openiris-base-SERVER\dataset1\Enhance"
@@ -89,6 +89,36 @@ def api_authenticate():
     
     kill_bridge()
     return jsonify({"status": "timeout", "message": "Authentication timed out."}), 408
+
+@newapp.route('/api/user_exists/<name>', methods=['GET'])
+def api_user_exists(name):
+    """Check if iris enrollment files exist for this user."""
+    l_path = os.path.join(GALLERY_DIR, f"{name}_L.png")
+    r_path = os.path.join(GALLERY_DIR, f"{name}_R.png")
+    exists = os.path.exists(l_path) and os.path.exists(r_path)
+    return jsonify({"exists": exists, "username": name}), 200
+
+
+@newapp.route('/api/delete_user/<name>', methods=['POST', 'DELETE'])
+def api_delete_user(name):
+    """Remove iris enrollment files for this user."""
+    l_path = os.path.join(GALLERY_DIR, f"{name}_L.png")
+    r_path = os.path.join(GALLERY_DIR, f"{name}_R.png")
+    deleted = []
+
+    for path in [l_path, r_path]:
+        if os.path.exists(path):
+            try:
+                os.remove(path)
+                deleted.append(os.path.basename(path))
+            except Exception as e:
+                return jsonify({"status": "error", "message": str(e)}), 500
+
+    # Refresh the in-memory gallery
+    global cached_gallery
+    cached_gallery = load_gallery()
+
+    return jsonify({"status": "success", "deleted": deleted}), 200
 
 if __name__ == "__main__":
     print("Server starting on http://127.0.0.1:5000")

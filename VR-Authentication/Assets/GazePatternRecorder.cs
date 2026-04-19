@@ -1,27 +1,26 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TS.GazeInteraction;
 
 public class GazePatternRecorder : MonoBehaviour
 {
     public static GazePatternRecorder Instance;
 
     [Header("References")]
-    public EyeTrackingManager eyeTrackingManager;
-    public Transform[] circles; // Assign all 9 circle transforms in order in Inspector
+    public Transform[] circles;
+    public GazeInteractable[] circleInteractables;
 
-    [Header("Settings")]
-    public float dwellTime = 1.0f;      // Seconds to look at a circle to register it
-    public float circleRadius = 0.05f;  // World-space radius to count as "looking at" circle
+    [Header("Visual Feedback")]
+    public Color defaultColor = Color.white;
+    public Color selectedColor = Color.green;
+    public Color dwellColor = Color.yellow;
 
-    // State
     private List<int> recordedPattern = new List<int>();
-    private int currentDwellTarget = -1;
-    private float dwellTimer = 0f;
     private bool isRecording = false;
 
-    public System.Action<int> OnCircleRegistered;   // Fires when a circle is added to pattern
-    public System.Action OnPatternComplete;          // Fires when user confirms pattern
+    public System.Action<int> OnCircleRegistered;
+    public System.Action OnPatternComplete;
 
     void Awake()
     {
@@ -29,74 +28,62 @@ public class GazePatternRecorder : MonoBehaviour
         Instance = this;
     }
 
-    void Update()
-    {
-        if (!isRecording) return;
-
-        // Get current gaze direction in world space
-        Vector3 gazeDirection = eyeTrackingManager.gazeOriginTrans.forward;
-        Vector3 gazeOrigin = eyeTrackingManager.gazeOriginTrans.position;
-
-        int gazedCircle = GetGazedCircle(gazeOrigin, gazeDirection);
-
-        if (gazedCircle == -1)
-        {
-            // Not looking at any circle reset dwell
-            dwellTimer = 0f;
-            currentDwellTarget = -1;
-            return;
-        }
-
-        // Already recorded this circle - skip
-        if (recordedPattern.Contains(gazedCircle)) return;
-
-        if (gazedCircle == currentDwellTarget)
-        {
-            dwellTimer += Time.deltaTime;
-            if (dwellTimer >= dwellTime)
-            {
-                RegisterCircle(gazedCircle);
-                dwellTimer = 0f;
-                currentDwellTarget = -1;
-            }
-        }
-        else
-        {
-            // Switched to a new circle - restart dwell
-            currentDwellTarget = gazedCircle;
-            dwellTimer = 0f;
-        }
-    }
-
-    private int GetGazedCircle(Vector3 origin, Vector3 direction)
-    {
-        for (int i = 0; i < circles.Length; i++)
-        {
-            // Distance from gaze ray to circle center
-            Vector3 toCircle = circles[i].position - origin;
-            float dist = Vector3.Cross(direction, toCircle).magnitude;
-            if (dist < circleRadius) return i;
-        }
-        return -1;
-    }
-
-    private void RegisterCircle(int index)
-    {
-        recordedPattern.Add(index);
-        OnCircleRegistered?.Invoke(index);
-    }
-
     public void StartRecording()
     {
+        Debug.Log("StartRecording called");
         recordedPattern.Clear();
-        currentDwellTarget = -1;
-        dwellTimer = 0f;
         isRecording = true;
+
+        // Reset all circle colors
+        for (int i = 0; i < circles.Length; i++)
+            UpdateCircleColor(i, defaultColor);
+
+        // Subscribe to each circle's events
+        for (int i = 0; i < circleInteractables.Length; i++)
+        {
+            int captured = i;
+            circleInteractables[i].OnGazeEnter.AddListener(() => OnCircleEnter(captured));
+            circleInteractables[i].OnGazeActivated.AddListener(() => OnCircleActivated(captured));
+            circleInteractables[i].OnGazeExit.AddListener(() => OnCircleExit(captured));
+        }
     }
 
     public void StopRecording()
     {
         isRecording = false;
+
+        // Unsubscribe from all events
+        for (int i = 0; i < circleInteractables.Length; i++)
+        {
+            circleInteractables[i].OnGazeEnter.RemoveAllListeners();
+            circleInteractables[i].OnGazeActivated.RemoveAllListeners();
+            circleInteractables[i].OnGazeExit.RemoveAllListeners();
+        }
+    }
+
+    private void OnCircleEnter(int index)
+    {
+        if (!isRecording) return;
+        if (recordedPattern.Contains(index)) return;
+        UpdateCircleColor(index, dwellColor);
+    }
+
+    private void OnCircleActivated(int index)
+    {
+        if (!isRecording) return;
+        if (recordedPattern.Contains(index)) return;
+
+        recordedPattern.Add(index);
+        UpdateCircleColor(index, selectedColor);
+        OnCircleRegistered?.Invoke(index);
+        Debug.Log($"Circle {index} registered. Pattern so far: {string.Join(",", recordedPattern)}");
+    }
+
+    private void OnCircleExit(int index)
+    {
+        if (!isRecording) return;
+        if (recordedPattern.Contains(index)) return;
+        UpdateCircleColor(index, defaultColor);
     }
 
     public void ConfirmPattern()
@@ -108,5 +95,12 @@ public class GazePatternRecorder : MonoBehaviour
     public List<int> GetRecordedPattern()
     {
         return new List<int>(recordedPattern);
+    }
+
+    private void UpdateCircleColor(int index, Color color)
+    {
+        RawImage img = circles[index].GetComponent<RawImage>();
+        if (img != null)
+            img.color = color;
     }
 }

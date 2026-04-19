@@ -36,6 +36,12 @@ public class UserDataManager : MonoBehaviour
         }
     }
 
+    public void DeleteUser(string username)
+    {
+        database.users.RemoveAll(u => u.username == username);
+        Save();
+    }
+
     public bool UsernameExists(string username)
     {
         return database.users.Exists(u => u.username == username);
