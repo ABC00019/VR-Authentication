@@ -45,8 +45,13 @@ public class UIManager : MonoBehaviour
     public Transform userListContent;
     public GameObject userListItemPrefab;
 
+    [Header("Shared Pattern Circles")]
+    public GameObject sharedCircles;
+
     private string baseUrl = "http://127.0.0.1:5000/api";
     private TouchScreenKeyboard vrKeyboard;
+
+    private string selectedUsername = null;
 
     void Start() { ShowOnly(mainPanel); }
 
@@ -268,6 +273,19 @@ public class UIManager : MonoBehaviour
         ShowSuccess();
     }
 
+
+    public void DeleteSelectedUser()
+    {
+        if (string.IsNullOrEmpty(selectedUsername))
+        {
+            Debug.Log("No user selected");
+            return;
+        }
+
+        DeleteUser(selectedUsername);
+        ShowUserListPanel();  // refresh the list after deletion
+    }
+    
     public void DeleteUser(string username)
     {
         StartCoroutine(DeleteUserCoroutine(username));
@@ -311,10 +329,15 @@ public class UIManager : MonoBehaviour
             if (panel != null)
                 panel.SetActive(panel == target);
         }
+
+        if (sharedCircles != null)
+            sharedCircles.SetActive(target == backUpCreationPanel || target == backUpPanel);
     }
 
     public void ShowUserListPanel()
     {
+        selectedUsername = null;  // clear any previous selection
+
         foreach (Transform child in userListContent)
             Destroy(child.gameObject);
 
@@ -322,9 +345,23 @@ public class UIManager : MonoBehaviour
         {
             GameObject item = Instantiate(userListItemPrefab, userListContent);
             item.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = user.username;
-        }
 
+            // Wire the item's button to select this user
+            Button btn = item.GetComponent<Button>();
+            if (btn != null)
+            {
+                string captured = user.username;
+                btn.onClick.AddListener(() => SelectUser(captured));
+            }
+        }
         ShowOnly(userListPanel);
+    }
+
+    public void SelectUser(string username)
+    {
+        selectedUsername = username;
+        Debug.Log($"Selected user: {username}");
+        // Optional: visually highlight the selected item in the list
     }
 
     private IEnumerator RunProgressBar()
