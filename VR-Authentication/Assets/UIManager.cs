@@ -321,7 +321,7 @@ public class UIManager : MonoBehaviour
             mainPanel, obtainingDataPanel, successPanel,
             authFailurePanel, enrollFailurePanel,
             backUpCreationPanel, backUpPanel, userListPanel,
-            keyboardPanel, loginOptionsPanel
+            keyboardPanel, loginOptionsPanel, sharedCircles
         };
 
         foreach (GameObject panel in allPanels)
