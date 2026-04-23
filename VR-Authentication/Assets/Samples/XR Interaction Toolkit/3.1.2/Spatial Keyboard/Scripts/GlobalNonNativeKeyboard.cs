@@ -222,7 +222,7 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.SpatialKeyboard
 
         void FaceKeyboardAtTarget(Transform target)
         {
-            var forward = (keyboard.transform.position - target.position).normalized;
+            var forward = (target.position - keyboard.transform.position).normalized;
             BurstMathUtility.OrthogonalLookRotation(forward, Vector3.up, out var newTarget);
             keyboard.transform.rotation = newTarget;
         }

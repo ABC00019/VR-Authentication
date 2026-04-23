@@ -3,7 +3,11 @@ guid: 015b50343a7cf174ebb7703245f6ba72
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - m_KeyboardPrefab: {fileID: 7979916830513711522, guid: 4dfac36245beb8e4d884a833a5a0517f, type: 3}
+  - m_PlayerRoot: {instanceID: 0}
+  - m_Keyboard: {instanceID: 0}
+  - m_CameraTransform: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

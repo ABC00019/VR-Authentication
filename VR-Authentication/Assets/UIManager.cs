@@ -314,6 +314,7 @@ public class UIManager : MonoBehaviour
     public void ShowBackUpCreation() { ShowOnly(backUpCreationPanel); }
     public void ShowBackUp() { ShowOnly(backUpPanel); }
     public void BackToMain() { ShowOnly(mainPanel); }
+    public void ShowLoginOptions() { ShowOnly(loginOptionsPanel); }
 
     private void ShowOnly(GameObject target)
     {
@@ -321,7 +322,7 @@ public class UIManager : MonoBehaviour
             mainPanel, obtainingDataPanel, successPanel,
             authFailurePanel, enrollFailurePanel,
             backUpCreationPanel, backUpPanel, userListPanel,
-            keyboardPanel, loginOptionsPanel, sharedCircles
+            loginOptionsPanel, sharedCircles
         };
 
         foreach (GameObject panel in allPanels)
