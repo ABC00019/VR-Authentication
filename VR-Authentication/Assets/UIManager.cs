@@ -88,6 +88,9 @@ public class UIManager : MonoBehaviour
     public void SignIn()
     {
         Debug.Log("SignIn button clicked");
+        if (GazePatternRecorder.Instance != null)
+                GazePatternRecorder.Instance.StopRecording();
+
         string username = usernameInputField.text.Trim();
         if (string.IsNullOrEmpty(username))
         {
@@ -314,7 +317,14 @@ public class UIManager : MonoBehaviour
     public void ShowEnrollFailure() { ShowOnly(enrollFailurePanel); }
     public void ShowBackUpCreation() { ShowOnly(backUpCreationPanel); }
     public void ShowBackUp() { ShowOnly(backUpPanel); }
-    public void BackToMain() { ShowOnly(mainPanel); }
+
+    public void BackToMain() 
+    { 
+        if (GazePatternRecorder.Instance != null)
+        GazePatternRecorder.Instance.StopRecording();
+        ShowOnly(mainPanel); 
+    }
+
     public void ShowLoginOptions() { ShowOnly(loginOptionsPanel); }
 
     private void ShowOnly(GameObject target)

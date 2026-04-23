@@ -59,6 +59,10 @@ public class GazePatternRecorder : MonoBehaviour
             circleInteractables[i].OnGazeActivated.RemoveAllListeners();
             circleInteractables[i].OnGazeExit.RemoveAllListeners();
         }
+
+        // Reset all circle colors to default
+        for (int i = 0; i < circles.Length; i++)
+            UpdateCircleColor(i, defaultColor);
     }
 
     private void OnCircleEnter(int index)
