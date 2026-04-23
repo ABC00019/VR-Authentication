@@ -29,7 +29,6 @@ public class UIManager : MonoBehaviour
     public GameObject enrollFailurePanel;
     public GameObject backUpCreationPanel;
     public GameObject backUpPanel;
-    public GameObject keyboardPanel;
     public GameObject userListPanel;
     public GameObject loginOptionsPanel;
 
