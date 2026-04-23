@@ -87,6 +87,7 @@ public class UIManager : MonoBehaviour
     // Called by the Sign-In button on the Main panel
     public void SignIn()
     {
+        Debug.Log("SignIn button clicked");
         string username = usernameInputField.text.Trim();
         if (string.IsNullOrEmpty(username))
         {
