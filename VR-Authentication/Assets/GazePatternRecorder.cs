@@ -33,6 +33,8 @@ public class GazePatternRecorder : MonoBehaviour
         Debug.Log("StartRecording called");
         recordedPattern.Clear();
         isRecording = true;
+        StopRecording();
+        isRecording = true;
 
         // Reset all circle colors
         for (int i = 0; i < circles.Length; i++)
