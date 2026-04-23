@@ -279,14 +279,18 @@ public class UIManager : MonoBehaviour
 
     public void DeleteSelectedUser()
     {
+        Debug.Log($"DeleteSelectedUser called. selectedUsername: '{selectedUsername}'");
+
         if (string.IsNullOrEmpty(selectedUsername))
         {
-            Debug.Log("No user selected");
+            Debug.Log("No user selected — deletion aborted");
             return;
         }
 
+        Debug.Log($"Attempting to delete: {selectedUsername}");
         DeleteUser(selectedUsername);
-        ShowUserListPanel();  // refresh the list after deletion
+        selectedUsername = null;
+        ShowUserListPanel();
     }
     
     public void DeleteUser(string username)
@@ -296,17 +300,20 @@ public class UIManager : MonoBehaviour
 
     private IEnumerator DeleteUserCoroutine(string username)
     {
-        // Delete iris data on server
         using (UnityWebRequest req = UnityWebRequest.Delete($"{baseUrl}/delete_user/{username}"))
         {
             yield return req.SendWebRequest();
-            if (req.result != UnityWebRequest.Result.Success)
+            if (req.result == UnityWebRequest.Result.Success)
+                Debug.Log($"Iris data deleted for '{username}'");
+            else
                 Debug.LogWarning($"Iris delete failed: {req.error}");
         }
 
-        // Delete pattern data locally
         UserDataManager.Instance.DeleteUser(username);
-        Debug.Log($"User '{username}' deleted from both systems");
+        Debug.Log($"Pattern data deleted for '{username}'");
+
+        selectedUsername = null;
+        ShowUserListPanel();
     }
 
     // --- UI Navigation Methods ---
@@ -352,24 +359,25 @@ public class UIManager : MonoBehaviour
 
     public void ShowUserListPanel()
     {
-        selectedUsername = null;  // clear any previous selection
-
         foreach (Transform child in userListContent)
             Destroy(child.gameObject);
 
         foreach (UserProfile user in UserDataManager.Instance.GetAllUsers())
         {
             GameObject item = Instantiate(userListItemPrefab, userListContent);
-            item.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = user.username;
 
-            // Wire the item's button to select this user
+            var tmp = item.transform.Find("Text").GetComponent<TMPro.TextMeshProUGUI>();
+            if (tmp != null)
+                tmp.text = user.username;
+
+            string captured = user.username;
+
+            // pointer click selection
             Button btn = item.GetComponent<Button>();
             if (btn != null)
-            {
-                string captured = user.username;
                 btn.onClick.AddListener(() => SelectUser(captured));
-            }
         }
+
         ShowOnly(userListPanel);
     }
 
