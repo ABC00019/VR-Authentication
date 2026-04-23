@@ -333,7 +333,7 @@ public class UIManager : MonoBehaviour
             mainPanel, obtainingDataPanel, successPanel,
             authFailurePanel, enrollFailurePanel,
             backUpCreationPanel, backUpPanel, userListPanel,
-            loginOptionsPanel, sharedCircles
+            loginOptionsPanel
         };
 
         foreach (GameObject panel in allPanels)
@@ -342,8 +342,13 @@ public class UIManager : MonoBehaviour
                 panel.SetActive(panel == target);
         }
 
+        bool showCircles = (target == backUpCreationPanel || target == backUpPanel);
+        Debug.Log($"ShowOnly: target={target.name}, showCircles={showCircles}");
+
         if (sharedCircles != null)
-            sharedCircles.SetActive(target == backUpCreationPanel || target == backUpPanel);
+            sharedCircles.SetActive(showCircles);
+        else
+            Debug.LogError("sharedCircles is null in UIManager!");
     }
 
     public void ShowUserListPanel()
