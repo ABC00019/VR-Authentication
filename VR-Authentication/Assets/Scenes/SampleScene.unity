@@ -6744,10 +6744,9 @@ MonoBehaviour:
   authFailurePanel: {fileID: 1793158051}
   enrollFailurePanel: {fileID: 258892813}
   backUpCreationPanel: {fileID: 397041355}
-  backUpPanel: {fileID: 0}
-  keyboardPanel: {fileID: 0}
+  backUpPanel: {fileID: 12814837}
   userListPanel: {fileID: 533432717}
-  loginOptionsPanel: {fileID: 0}
+  loginOptionsPanel: {fileID: 1438693568}
   progressBar: {fileID: 2009611808}
   continueButton: {fileID: 703746891}
   progressDuration: 3
@@ -11255,7 +11254,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 2.532209e-12, y: 1.5788934e-19, z: 0.00004319678, w: 0.00000066755774}
+  m_BoundingSphereOverride: {x: 1.02e-43, y: 4e-45, z: 1.0747e-41, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
